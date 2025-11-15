@@ -1,8 +1,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 93cdd03b6f2f9c6ae45ee213097440d94943e37a
+=======
+>>>>>>> old-main
 # 🐉 DragonQuest – Mini Proyecto 2  
 **Materia:** Programación Orientada a Eventos  
 **Profesor:** Joshua Triana  
@@ -177,6 +180,7 @@ class JefeFinal extends Enemigo { ... }
 
 - Crear una interfaz gráfica (GUI) para el combate.
 
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
@@ -185,3 +189,6 @@ APLICACION DEL MVC AL MINIPROYECTO 2
 >>>>>>> 8d57256c10a5709676afeef810d8aaaa476924f4
 =======
 >>>>>>> 93cdd03b6f2f9c6ae45ee213097440d94943e37a
+=======
+=======
+>>>>>>> old-main
