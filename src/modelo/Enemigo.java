@@ -1,7 +1,8 @@
-package personajes;
+package mvc.model.personajes;
 
-import habilidades.Habilidad;
 import java.util.*;
+
+import mvc.model.habilidades.Habilidad;
 
 /**
  * Enemigo - personaje controlado por IA.

@@ -1,6 +1,6 @@
-package habilidades;
+package mvc.model.habilidades;
 
-import personajes.Personaje;
+import mvc.model.personajes.Personaje;
 
 /**
  * Curacion - habilidad que restaura HP del usuario.

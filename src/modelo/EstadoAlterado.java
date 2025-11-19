@@ -1,4 +1,4 @@
-package estados;
+package mvc.model.estados;
 
 /**
  * EstadoAlterado - enum que define los posibles estados aplicables a los personajes.

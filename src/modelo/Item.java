@@ -1,6 +1,6 @@
-package items;
+package mvc.model.items;
 
-import personajes.Personaje;
+import mvc.model.personajes.Personaje;
 
 /**
  * Item - clase base para objetos utilizables.

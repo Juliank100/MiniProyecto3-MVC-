@@ -1,7 +1,7 @@
-package items;
+package mvc.model.items;
 
-import personajes.Personaje;
-import estados.EstadoAlterado;
+import mvc.model.estados.EstadoAlterado;
+import mvc.model.personajes.Personaje;
 
 /**
  * Antídoto - elimina el estado VENENO del objetivo.

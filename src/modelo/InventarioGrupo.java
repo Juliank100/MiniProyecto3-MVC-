@@ -1,4 +1,4 @@
-package items;
+package mvc.model.items;
 
 import java.util.*;
 
@@ -44,7 +44,7 @@ public class InventarioGrupo {
         Pair<Item, Integer> p = mapa.get(item.getNombre());
         boolean efecto;
         try {
-            efecto = p.first.usar((personajes.Personaje) usuarioObj, (personajes.Personaje) objetivoObj);
+            efecto = p.first.usar((mvc.model.personajes.Personaje) usuarioObj, (mvc.model.personajes.Personaje) objetivoObj);
         } catch (ClassCastException ex) {
             System.out.println("Error: el usuario u objetivo no son Personaje.");
             return false;

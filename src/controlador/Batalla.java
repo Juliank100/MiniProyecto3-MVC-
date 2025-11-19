@@ -1,10 +1,10 @@
-package combate;
+package mvc.model.combate;
 
-import personajes.*;
-import items.*;
 import java.util.*;
 
-import habilidades.*;
+import mvc.model.habilidades.*;
+import mvc.model.items.*;
+import mvc.model.personajes.*;
 
 /**
  * Batalla - Sistema de combate actualizado con Mini Jefe

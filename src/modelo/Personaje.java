@@ -1,7 +1,8 @@
-package personajes;
+package mvc.model.personajes;
 
-import habilidades.Habilidad;
-import estados.EstadoAlterado;
+import mvc.model.estados.EstadoAlterado;
+import mvc.model.habilidades.Habilidad;
+
 import java.util.*;
 
 /**

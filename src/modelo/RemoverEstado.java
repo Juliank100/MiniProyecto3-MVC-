@@ -1,7 +1,7 @@
-package habilidades;
+package mvc.model.habilidades;
 
-import personajes.Personaje;
-import estados.EstadoAlterado;
+import mvc.model.estados.EstadoAlterado;
+import mvc.model.personajes.Personaje;
 
 /**
  * RemoverEstado - Elimina estados alterados negativos

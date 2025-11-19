@@ -1,7 +1,8 @@
-package personajes;
+package mvc.model.personajes;
 
-import habilidades.Habilidad;
 import java.util.*;
+
+import mvc.model.habilidades.Habilidad;
 
 /**
  * MiniBoss - Enemigo jefe especial con características mejoradas
@@ -214,7 +215,7 @@ public class MiniBoss extends Enemigo {
      * Sobrescribe aplicarEstado para agregar resistencia
      */
     @Override
-    public void aplicarEstado(estados.EstadoAlterado nuevo) {
+    public void aplicarEstado(mvc.model.estados.EstadoAlterado nuevo) {
         Random rand = new Random();
         
         // 50% de probabilidad de resistir estados alterados

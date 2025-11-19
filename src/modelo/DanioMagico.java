@@ -1,6 +1,6 @@
-package habilidades;
+package mvc.model.habilidades;
 
-import personajes.Personaje;
+import mvc.model.personajes.Personaje;
 
 /**
  * DanioMagico - habilidad que inflige daño fijo (ignora o usa ataque mágico).

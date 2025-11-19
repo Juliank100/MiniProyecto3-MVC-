@@ -1,4 +1,4 @@
-package gui;
+package mvc.view.gui;
 
 import javax.swing.*;
 import java.io.OutputStream;

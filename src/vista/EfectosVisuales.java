@@ -1,4 +1,4 @@
-package gui;
+package mvc.view.gui;
 
 import javax.sound.sampled.*;
 import javax.swing.*;

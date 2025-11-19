@@ -1,8 +1,9 @@
-package personajes;
+package mvc.model.personajes;
 
 
-import habilidades.Habilidad;
-import items.*;
+import mvc.model.habilidades.Habilidad;
+import mvc.model.items.*;
+
 import java.util.*;
 
 /**

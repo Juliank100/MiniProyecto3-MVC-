@@ -1,8 +1,9 @@
 // ===== GolpeCritico.java =====
-package habilidades;
+package mvc.model.habilidades;
 
-import personajes.Personaje;
 import java.util.Random;
+
+import mvc.model.personajes.Personaje;
 
 /**
  * GolpeCritico - Golpe físico con chance de hacer daño crítico

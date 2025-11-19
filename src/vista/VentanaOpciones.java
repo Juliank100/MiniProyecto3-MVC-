@@ -1,4 +1,4 @@
-package gui;
+package mvc.view.gui;
 
 import config.ConfiguracionJuego;
 import javax.swing.*;

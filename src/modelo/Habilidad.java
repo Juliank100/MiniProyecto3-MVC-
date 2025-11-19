@@ -1,6 +1,6 @@
-package habilidades;
+package mvc.model.habilidades;
 
-import personajes.Personaje;
+import mvc.model.personajes.Personaje;
 
 /**
  * Clase abstracta que define la interfaz de una Habilidad.

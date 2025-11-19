@@ -1,7 +1,7 @@
-package habilidades;
+package mvc.model.habilidades;
 
-import personajes.Personaje;
-import estados.EstadoAlterado;
+import mvc.model.estados.EstadoAlterado;
+import mvc.model.personajes.Personaje;
 
 /** Aplica el estado PARALIZADO al objetivo (chance de fallar turno). */
 public class Paralisis extends Habilidad {

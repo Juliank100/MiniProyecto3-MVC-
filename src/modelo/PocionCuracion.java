@@ -1,6 +1,6 @@
-package items;
+package mvc.model.items;
 
-import personajes.Personaje;
+import mvc.model.personajes.Personaje;
 
 /** Pocion que cura HP del objetivo. */
 public class PocionCuracion extends Item {

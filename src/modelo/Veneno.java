@@ -1,7 +1,7 @@
-package habilidades;
+package mvc.model.habilidades;
 
-import personajes.Personaje;
-import estados.EstadoAlterado;
+import mvc.model.estados.EstadoAlterado;
+import mvc.model.personajes.Personaje;
 
 /** Aplica el estado VENENO al objetivo (daño por turno). */
 public class Veneno extends Habilidad {
