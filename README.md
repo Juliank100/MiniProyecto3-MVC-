@@ -29,7 +29,7 @@ El juego se ejecuta en consola y busca aplicar los conceptos fundamentales de la
 
 ## Estructura del Proyecto
 
-
+```plaintext
 dragonquest/
 
 mvc/
@@ -105,7 +105,7 @@ mvc/
 │   └── ConfiguracionJuegoManager.java → Control centralizado de opciones (volumen, dificultad, etc.)
 
 
-
+```
 ---
 
 ## Instrucciones para Colaboradores
