@@ -48,7 +48,6 @@ public class VentanaPrincipal extends JFrame {
                         }
                     }
                 } else {
-                    // Color sólido como fallback
                     g.setColor(new Color(30, 30, 80));
                     g.fillRect(0, 0, getWidth(), getHeight());
                 }
@@ -56,7 +55,6 @@ public class VentanaPrincipal extends JFrame {
         };
         panelFondo.setLayout(new BorderLayout());
 
-        // Fuente retro
         Font fuente = new Font("Monospaced", Font.BOLD, 18);
 
         // Título del juego con efecto de sombra
@@ -76,11 +74,9 @@ public class VentanaPrincipal extends JFrame {
                 int x = (getWidth() - fm.stringWidth(texto)) / 2;
                 int y = getHeight() / 2;
                 
-                // Sombra
                 g2d.setColor(Color.BLACK);
                 g2d.drawString(texto, x + 3, y + 3);
                 
-                // Texto principal
                 g2d.setColor(Color.YELLOW);
                 g2d.drawString(texto, x, y);
             }
@@ -88,7 +84,6 @@ public class VentanaPrincipal extends JFrame {
         panelTitulo.setOpaque(false);
         panelTitulo.setPreferredSize(new Dimension(800, 150));
 
-        // Subtítulo
         titulo = new JLabel("~ Simulador de Combate ~", SwingConstants.CENTER);
         titulo.setForeground(Color.CYAN);
         titulo.setFont(new Font("Monospaced", Font.ITALIC, 16));
@@ -104,7 +99,6 @@ public class VentanaPrincipal extends JFrame {
         btnOpciones = crearBoton("⚙️ OPCIONES", fuente);
         btnSalir = crearBoton("✖ SALIR", fuente);
 
-        // Panel de botones
         JPanel panelBotones = new JPanel();
         panelBotones.setOpaque(false);
         panelBotones.setLayout(new GridLayout(3, 1, 0, 15));
@@ -113,7 +107,6 @@ public class VentanaPrincipal extends JFrame {
         panelBotones.add(btnOpciones);
         panelBotones.add(btnSalir);
 
-        // Panel inferior con información
         JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelInferior.setOpaque(false);
         JLabel lblVersion = new JLabel("v1.0 | Proyecto Universitario");
@@ -121,24 +114,58 @@ public class VentanaPrincipal extends JFrame {
         lblVersion.setFont(new Font("Monospaced", Font.PLAIN, 11));
         panelInferior.add(lblVersion);
 
-        // Agregar al panel de fondo
         panelFondo.add(panelSuperior, BorderLayout.NORTH);
         panelFondo.add(panelBotones, BorderLayout.CENTER);
         panelFondo.add(panelInferior, BorderLayout.SOUTH);
         add(panelFondo);
 
-        // Acciones de los botones
+        // ⭐ ACCIONES DE LOS BOTONES - CONECTADAS AL SISTEMA
         btnIniciar.addActionListener((ActionEvent e) -> {
+            System.out.println("🎮 Iniciando combate...");
             detenerMusica();
-            dispose();
-            new VentanaCombate().setVisible(true);
+            
+            // Crear y mostrar ventana de combate
+            try {
+                VentanaCombate ventanaCombate = new VentanaCombate();
+                ventanaCombate.setVisible(true);
+                
+                // Cerrar ventana principal DESPUÉS de que se abra la de combate
+                dispose();
+                System.out.println("✅ Ventana de combate iniciada");
+            } catch (Exception ex) {
+                System.err.println("❌ Error al iniciar ventana de combate:");
+                ex.printStackTrace();
+                
+                // Mostrar error al usuario
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Error al iniciar combate:\n" + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                
+                // No cerrar la ventana principal si hay error
+                reproducirMusica("/sonidos/musica_menu.wav");
+            }
         });
 
         btnOpciones.addActionListener(e -> {
-            VentanaOpciones ventanaOpciones = new VentanaOpciones(this);
-            ventanaOpciones.setVisible(true);
-            // Recargar configuración por si cambió
-            config = ConfiguracionJuego.obtenerInstancia();
+            System.out.println("⚙️ Abriendo opciones...");
+            try {
+                VentanaOpciones ventanaOpciones = new VentanaOpciones(this);
+                ventanaOpciones.setVisible(true);
+                System.out.println("✅ Ventana de opciones abierta");
+            } catch (Exception ex) {
+                System.err.println("❌ Error al abrir opciones:");
+                ex.printStackTrace();
+                
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Error al abrir opciones:\n" + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
         });
 
         btnSalir.addActionListener(e -> {
@@ -156,29 +183,21 @@ public class VentanaPrincipal extends JFrame {
             }
         });
 
-        // Reproducir música (si está disponible)
         reproducirMusica("/sonidos/musica_menu.wav");
         
-        // Mostrar tutorial si está activado
         if (config.isMostrarTutorial()) {
             mostrarTutorialInicial();
         }
     }
 
-    /**
-     * Crea un botón con el estilo retro del juego
-     */
     private JButton crearBoton(String texto, Font fuente) {
         JButton boton = new JButton(texto);
-
-        // Forzar UI básica para que respete colores personalizados en Windows LAF
         boton.setUI(new javax.swing.plaf.basic.BasicButtonUI());
 
-        // Colores contrastantes para buena legibilidad
-        Color colorFondo = new Color(30, 60, 130);      // Azul oscuro
-        Color colorHover = new Color(45, 90, 170);      // Azul más claro para hover
+        Color colorFondo = new Color(30, 60, 130);
+        Color colorHover = new Color(45, 90, 170);
         Color colorTexto = Color.WHITE;
-        Color colorBorde = new Color(255, 215, 0);      // Dorado
+        Color colorBorde = new Color(255, 215, 0);
 
         boton.setOpaque(true);
         boton.setContentAreaFilled(true);
@@ -191,7 +210,6 @@ public class VentanaPrincipal extends JFrame {
             BorderFactory.createEmptyBorder(12, 25, 12, 25)
         ));
 
-        // Efecto hover
         boton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 boton.setBackground(colorHover);
@@ -212,9 +230,6 @@ public class VentanaPrincipal extends JFrame {
         return boton;
     }
 
-    /**
-     * Reproduce música de fondo en bucle
-     */
     private void reproducirMusica(String ruta) {
         try {
             URL url = getClass().getResource(ruta);
@@ -227,7 +242,6 @@ public class VentanaPrincipal extends JFrame {
             clipMusica = AudioSystem.getClip();
             clipMusica.open(audioInput);
             
-            // Ajustar volumen según configuración
             ajustarVolumenMusica();
             
             clipMusica.loop(Clip.LOOP_CONTINUOUSLY);
@@ -240,16 +254,11 @@ public class VentanaPrincipal extends JFrame {
         }
     }
     
-    /**
-     * Ajusta el volumen de la música según la configuración actual
-     */
     public void ajustarVolumenMusica() {
         if (clipMusica != null && clipMusica.isOpen()) {
             try {
                 FloatControl volumen = (FloatControl) clipMusica.getControl(FloatControl.Type.MASTER_GAIN);
-                // Convertir porcentaje a decibeles
                 float db = (float) (Math.log(config.getVolumenMusica() / 100.0) / Math.log(10.0) * 20.0);
-                // Limitar el rango de decibeles
                 db = Math.max(-80.0f, Math.min(6.0f, db));
                 volumen.setValue(db);
                 System.out.println("🔊 Volumen de música ajustado a: " + config.getVolumenMusica() + "%");
@@ -259,9 +268,6 @@ public class VentanaPrincipal extends JFrame {
         }
     }
 
-    /**
-     * Detiene la música
-     */
     private void detenerMusica() {
         if (clipMusica != null && clipMusica.isRunning()) {
             clipMusica.stop();
@@ -269,9 +275,6 @@ public class VentanaPrincipal extends JFrame {
         }
     }
 
-    /**
-     * Muestra un diálogo de tutorial al iniciar por primera vez
-     */
     private void mostrarTutorialInicial() {
         SwingUtilities.invokeLater(() -> {
             String mensaje = """
@@ -300,7 +303,6 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public static void main(String[] args) {
-        // Configurar Look & Feel del sistema
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {

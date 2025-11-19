@@ -17,12 +17,12 @@ import java.util.List;
 
 public class VentanaCombate extends JFrame {
     // Componentes principales
-    private JPanel panelHeroes, panelEnemigos, panelAcciones ;
+    private JPanel panelHeroes, panelEnemigos, panelAcciones;
     private JTextArea logCombate;
     private JScrollPane scrollLog;
     private List<PanelPersonaje> panelesHeroes;
     private List<PanelPersonaje> panelesEnemigos;
-    private JLabel lblTurno; // Label del turno para actualizarlo
+    private JLabel lblTurno;
     
     // Lógica de combate
     private List<Personaje> heroes;
@@ -50,14 +50,21 @@ public class VentanaCombate extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         
-        // Cargar fondo
-        fondo = new ImageIcon(getClass().getResource("/imagenes/fondo_azul.png")).getImage();
+        // Cargar fondo (si no existe, usar color sólido)
+        try {
+            URL ruta = getClass().getResource("/imagenes/fondo_azul.png");
+            if (ruta != null) {
+                fondo = new ImageIcon(ruta).getImage();
+            }
+        } catch (Exception e) {
+            System.err.println("⚠️ No se pudo cargar el fondo, usando color sólido");
+        }
         
         // Guardar salida original
         salidaOriginal = System.out;
         
         // Crear scanner para enemigos
-        scannerEnemigos = new Scanner("dummy"); // Scanner dummy para enemigos
+        scannerEnemigos = new Scanner("dummy");
         
         // Inicializar estructuras de datos
         heroes = new ArrayList<>();
@@ -75,7 +82,7 @@ public class VentanaCombate extends JFrame {
         // Configurar redirección de System.out al log
         ConsolaRedirect.configurarRedireccion(logCombate);
         
-        // Reproducir música de batalla
+        // Reproducir música de batalla (si existe)
         reproducirMusica("/sonidos/musica_menu.wav");
         
         // Iniciar primer turno
@@ -88,10 +95,16 @@ public class VentanaCombate extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                for (int x = 0; x < getWidth(); x += fondo.getWidth(null)) {
-                    for (int y = 0; y < getHeight(); y += fondo.getHeight(null)) {
-                        g.drawImage(fondo, x, y, this);
+                if (fondo != null) {
+                    for (int x = 0; x < getWidth(); x += fondo.getWidth(null)) {
+                        for (int y = 0; y < getHeight(); y += fondo.getHeight(null)) {
+                            g.drawImage(fondo, x, y, this);
+                        }
                     }
+                } else {
+                    // Fallback: color azul oscuro
+                    g.setColor(new Color(30, 30, 80));
+                    g.fillRect(0, 0, getWidth(), getHeight());
                 }
             }
         };
@@ -146,7 +159,7 @@ public class VentanaCombate extends JFrame {
         panelInferior.setOpaque(false);
         panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
         
-        // Log de combate (más compacto)
+        // Log de combate
         logCombate = new JTextArea(6, 40);
         logCombate.setEditable(false);
         logCombate.setBackground(new Color(20, 20, 40));
@@ -174,7 +187,7 @@ public class VentanaCombate extends JFrame {
     }
     
     private void inicializarCombate() {
-        // Crear héroes (con velocidades altas para actuar primero)
+        // Crear héroes
         Heroe heroe = new Heroe("Héroe", 100, 50, 20, 10, 25);
         heroe.agregarHabilidad(new DanioMagico("Bola de Fuego", 10, 30));
         heroe.agregarHabilidad(new Curacion("Curar", 8, 25));
@@ -196,11 +209,10 @@ public class VentanaCombate extends JFrame {
         heroes.add(jessica);
         heroes.add(angelo);
         
-        // Crear enemigos (3 normales + 1 MINI JEFE) - con velocidades menores
+        // Crear enemigos (3 normales + 1 MINI JEFE)
         Enemigo fantasma = new Enemigo("Fantasma", 85, 40, 18, 8, 15, "estratégico");
         fantasma.agregarHabilidad(new Dormir("Pesadilla", 5));
         
-        // ⭐ MINI JEFE - Enemigo más poderoso
         MiniBoss dragonOscuro = new MiniBoss("Dragón Oscuro", 120, 40, 25, 12, 12, "agresivo");
         dragonOscuro.agregarHabilidad(new DanioMagico("Aliento de Fuego", 0, 35));
         dragonOscuro.agregarHabilidad(new DanioMagico("Llamarada Infernal", 15, 50));
@@ -208,7 +220,6 @@ public class VentanaCombate extends JFrame {
         Enemigo slimeMetalico = new Enemigo("Slime Metálico", 50, 30, 15, 25, 18, "evasivo");
         slimeMetalico.agregarHabilidad(new Veneno("Baba Tóxica", 3));
 
-        // Nuevo enemigo adicional
         Enemigo orcoGuerrero = new Enemigo("Orco Guerrero", 95, 35, 22, 12, 14, "agresivo");
         orcoGuerrero.agregarHabilidad(new GolpeCritico("Hachazo Salvaje", 8));
         orcoGuerrero.agregarHabilidad(new Aturdimiento("Golpe Atronador", 6));
@@ -216,7 +227,7 @@ public class VentanaCombate extends JFrame {
         enemigos.add(fantasma);
         enemigos.add(slimeMetalico);
         enemigos.add(orcoGuerrero);
-        enemigos.add(dragonOscuro); // ⭐ Mini Jefe al final
+        enemigos.add(dragonOscuro);
         
         // Inicializar inventario
         inventario.agregarItem(new PocionCuracion("Poción pequeña", 30), 5);
@@ -226,19 +237,16 @@ public class VentanaCombate extends JFrame {
     }
     
     private void iniciarSiguienteTurno() {
-        // Verificar fin del combate
         if (verificarFinCombate()) {
             return;
         }
         
-        // Ordenar por velocidad (alternado: héroe, enemigo, héroe, enemigo...)
+        // Ordenar por velocidad
         List<Personaje> orden = new ArrayList<>();
         orden.addAll(heroes);
         orden.addAll(enemigos);
         orden.sort((a, b) -> {
-            // Primero por velocidad (mayor velocidad primero)
             if (b.getVelocidad() != a.getVelocidad()) return b.getVelocidad() - a.getVelocidad();
-            // En caso de empate, alternar: héroe, enemigo, héroe, enemigo...
             if (a instanceof Heroe && b instanceof Enemigo) return -1;
             if (a instanceof Enemigo && b instanceof Heroe) return 1;
             return 0;
@@ -248,13 +256,11 @@ public class VentanaCombate extends JFrame {
     }
     
     private void ejecutarTurnos(List<Personaje> orden, int indice) {
-        // Verificar fin del combate antes de continuar
         if (verificarFinCombate()) {
             return;
         }
         
         if (indice >= orden.size()) {
-            // Fin de ronda, incrementar turno
             turno++;
             actualizarPaneles();
             actualizarLabelTurno();
@@ -262,7 +268,6 @@ public class VentanaCombate extends JFrame {
             agregarLog("TURNO " + turno);
             agregarLog("═══════════════════════════════════════════════════════════════\n");
             
-            // Iniciar nueva ronda después de un breve delay
             Timer timer = new Timer(1000, e -> iniciarSiguienteTurno());
             timer.setRepeats(false);
             timer.start();
@@ -272,17 +277,14 @@ public class VentanaCombate extends JFrame {
         personajeActual = orden.get(indice);
         
         if (!personajeActual.estaVivo()) {
-            // Saltar personajes muertos
             ejecutarTurnos(orden, indice + 1);
             return;
         }
         
-        // Procesar estados antes de actuar
         boolean puedeActuar = personajeActual.procesarEstadosAntesDeActuar();
         actualizarPaneles();
         
         if (!puedeActuar) {
-            // Personaje no puede actuar, continuar con el siguiente
             Timer timer = new Timer(1500, e -> ejecutarTurnos(orden, indice + 1));
             timer.setRepeats(false);
             timer.start();
@@ -331,10 +333,9 @@ public class VentanaCombate extends JFrame {
             String textoBoton = h.getNombre() + " (MP: " + h.costoMP + ")";
             JButton btnHabilidad = crearBotonAccion(textoBoton);
             
-            // Deshabilitar si no tiene suficiente MP
             if (heroe.getMpActual() < h.costoMP) {
                 btnHabilidad.setEnabled(false);
-                btnHabilidad.setBackground(Color.DARK_GRAY);
+                btnHabilidad.setBackground(new Color(60, 60, 60));
             }
             
             btnHabilidad.addActionListener(e -> {
@@ -475,7 +476,6 @@ public class VentanaCombate extends JFrame {
             String nombreHabilidad = accion.substring(10);
             for (Habilidad h : heroe.getHabilidades()) {
                 if (h.getNombre().equals(nombreHabilidad)) {
-                    // Verificar y consumir MP usando el método público
                     if (heroe.consumirMP(h.costoMP)) {
                         h.ejecutar(heroe, objetivo);
                     } else {
@@ -492,7 +492,6 @@ public class VentanaCombate extends JFrame {
         try {
             enemigo.tomarTurno(enemigos, heroes, scannerEnemigos);
         } catch (Exception e) {
-            // Si hay error, hacer ataque básico
             agregarLog("⚠️ Error en turno de enemigo, atacando básicamente...");
             if (!heroes.isEmpty()) {
                 Personaje objetivo = heroes.get(0);
@@ -571,32 +570,30 @@ public class VentanaCombate extends JFrame {
     private JButton crearBotonAccion(String texto) {
         JButton boton = new JButton(texto);
         
-        // Forzar UI básica para que respete colores
         boton.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        
-        // Colores contrastantes
-        Color colorFondo = new Color(30, 60, 130);
-        Color colorTexto = Color.WHITE;
-        Color colorBorde = new Color(255, 215, 0);
         
         boton.setOpaque(true);
         boton.setContentAreaFilled(true);
-        boton.setBackground(colorFondo);
-        boton.setForeground(colorTexto);
-        boton.setFont(new Font("Monospaced", Font.BOLD, 14));
+        boton.setBackground(new Color(30, 60, 130));
+        boton.setForeground(Color.WHITE);
+        boton.setFont(new Font("Monospaced", Font.BOLD, 13));
         boton.setFocusPainted(false);
-        boton.setBorder(BorderFactory.createLineBorder(colorBorde, 2));
+        boton.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(255, 215, 0), 2),
+            BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
         boton.setPreferredSize(new Dimension(180, 40));
         
-        // Efecto hover
         boton.addMouseListener(new java.awt.event.MouseAdapter() {
+            Color colorOriginal = boton.getBackground();
+            
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 boton.setBackground(new Color(45, 90, 170));
-                boton.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                boton.setBackground(colorFondo);
-                boton.setBorder(BorderFactory.createLineBorder(colorBorde, 2));
+                if (boton.isEnabled()) {
+                    boton.setBackground(colorOriginal);
+                }
             }
         });
         
@@ -606,37 +603,33 @@ public class VentanaCombate extends JFrame {
     private void reproducirMusica(String ruta) {
         try {
             URL url = getClass().getResource(ruta);
-            if (url == null) return;
+            if (url == null) {
+                System.out.println("⚠️ Música no encontrada: " + ruta);
+                return;
+            }
             AudioInputStream audioInput = AudioSystem.getAudioInputStream(url);
             clipMusica = AudioSystem.getClip();
             clipMusica.open(audioInput);
             
-            // Aplicar volumen según configuración
             ajustarVolumenMusica();
             
             clipMusica.loop(Clip.LOOP_CONTINUOUSLY);
             clipMusica.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("⚠️ No se pudo reproducir música: " + e.getMessage());
         }
     }
     
-    /**
-     * Ajusta el volumen de la música según la configuración actual
-     */
     public void ajustarVolumenMusica() {
         if (clipMusica != null && clipMusica.isOpen()) {
             try {
                 FloatControl volumen = (FloatControl) clipMusica.getControl(FloatControl.Type.MASTER_GAIN);
-                // Obtener configuración actual
                 config.ConfiguracionJuego configuracion = config.ConfiguracionJuego.obtenerInstancia();
                 float db = (float) (Math.log(configuracion.getVolumenMusica() / 100.0) / Math.log(10.0) * 20.0);
-                // Limitar el rango de decibeles
                 db = Math.max(-80.0f, Math.min(6.0f, db));
                 volumen.setValue(db);
-                System.out.println("🔊 Volumen de música ajustado a: " + configuracion.getVolumenMusica() + "%");
             } catch (IllegalArgumentException e) {
-                System.err.println("⚠️ No se pudo ajustar el volumen de música: " + e.getMessage());
+                System.out.println("⚠️ No se pudo ajustar el volumen");
             }
         }
     }
@@ -646,11 +639,9 @@ public class VentanaCombate extends JFrame {
             clipMusica.stop();
             clipMusica.close();
         }
-        // Limpiar scanner
         if (scannerEnemigos != null) {
             scannerEnemigos.close();
         }
-        // Restaurar salida original
         ConsolaRedirect.restaurarSalida(salidaOriginal);
     }
     
@@ -667,7 +658,7 @@ public class VentanaCombate extends JFrame {
             setBackground(new Color(20, 20, 40, 200));
             setBorder(BorderFactory.createLineBorder(esHeroe ? Color.CYAN : Color.RED, 2));
             
-            String icono = esHeroe ? "⚔️" : "👾";
+            String icono = esHeroe ? "⚔️" : (p instanceof MiniBoss ? "👹" : "👾");
             lblNombre = new JLabel(icono + " " + p.getNombre());
             lblNombre.setForeground(Color.WHITE);
             lblNombre.setFont(new Font("Monospaced", Font.BOLD, 13));
