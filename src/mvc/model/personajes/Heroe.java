@@ -1,6 +1,5 @@
 package mvc.model.personajes;
 
-
 import mvc.model.habilidades.Habilidad;
 import mvc.model.items.*;
 
@@ -105,7 +104,13 @@ public class Heroe extends Personaje {
             return;
         }
         Personaje objetivo = vivos.get(objetivoIdx - 1);
-        h.ejecutar(this, objetivo);
+        
+        // Verificar y consumir MP
+        if (consumirMP(h.costoMP)) {
+            h.ejecutar(this, objetivo);
+        } else {
+            System.out.println("⚠️ No tienes suficiente MP para usar " + h.getNombre());
+        }
     }
 
     /**

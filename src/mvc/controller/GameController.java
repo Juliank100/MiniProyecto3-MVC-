@@ -1,7 +1,6 @@
 package mvc.controller;
 
 import mvc.model.GameModel;
-import mvc.view.ConsoleView;
 import mvc.view.gui.GUIAdapter;
 
 import java.util.Scanner;
